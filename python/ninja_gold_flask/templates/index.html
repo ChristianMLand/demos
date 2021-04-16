@@ -7,12 +7,12 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <div class="wrapper">
-        <div class="balance">
+    <div id="wrapper">
+        <div id="balance">
             <label for="gold">$</label>
             <input type="text" id="gold" value="{{session['gold']}}" readonly/>
         </div>
-        <div class="locations">
+        <div id="locations">
             {% for location,(min,max) in gold_map.items() %}
             <form action="/{{location}}" class="location">
                 <h2>{{location}}</h2>
@@ -21,14 +21,15 @@
             </form>
             {% endfor %}
         </div>
-        <div class="activities-container">
+        <div id="activities-container">
             <span>Activities</span>
             <div name="activities" id="activities">
                 {% for activity in session["activities"]|reverse %}
-                <p>{{activity}}</p>
+                {{activity|safe}}
                 {% endfor %}
             </div>
         </div>
+        <button onclick="location.href='/reset'">Reset</button>
     </div>
 </body>
 </html>

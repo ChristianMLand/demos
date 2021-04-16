@@ -65,21 +65,21 @@ span{
     font-size: 20px;
     text-align: right;
 }
-.wrapper{
+#wrapper{
     width: 60%;
     padding: 1.5rem;
     margin: auto;
     margin-top: 3rem;
     text-align: center;
 }
-.balance,.locations{
+#balance,#locations{
     display: flex;
 }
-.balance,.activities-container{
+#balance,#activities-container{
     text-align: left;
     margin: 1.5rem 1rem;
 }
-.locations{
+#locations{
     justify-content: space-between
 }
 .location{

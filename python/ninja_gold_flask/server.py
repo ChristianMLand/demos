@@ -8,7 +8,7 @@ gold_map = {
     "cave" : (5,10),
     "house" : (2,5),
     "casino" : (-50,50),
-    "test":(-300,300)
+    "test": (-300,300)
 }
 
 @app.route("/")
@@ -22,7 +22,8 @@ def index():
 def process_money(location):
     if location in gold_map:
         amount = randint(*gold_map[location])
-        session["activities"].append(f"Earned {amount} gold from the {location}!")
+        color = "green" if amount > 0 else "red"
+        session["activities"].append(f"<p style=color:{color}>Earned {amount} gold from the {location}!</p>")
         session["gold"] += amount
     return redirect("/")
 
