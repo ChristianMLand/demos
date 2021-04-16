@@ -11,20 +11,31 @@ gold_map = {
     "test": (-300,300)
 }
 
+settings = {
+    "win" : 500,
+    "moves" : 15
+}
+
 @app.route("/")
 def index():
     if "gold" not in session:
         session["gold"] = 0
         session["activities"] = []
+        session["moves"] = 0
+        session["gameover"] = False
     return render_template("index.html",gold_map=gold_map)
 
 @app.route("/<location>")
 def process_money(location):
-    if location in gold_map:
+    if location in gold_map and not session["gameover"]:
         amount = randint(*gold_map[location])
-        color = "green" if amount > 0 else "red"
-        session["activities"].append(f"<p style=color:{color}>Earned {amount} gold from the {location}!</p>")
+        session["activities"].append(f"<p style=color:{'green' if amount > 0 else 'red'}>Earned {amount} gold from the {location}!</p>")
         session["gold"] += amount
+        session["moves"] += 1
+        won = session["gold"] >= settings["win"]
+        if won or session["moves"] == settings["moves"]:
+            session["gameover"] = True
+            session["activities"].append(f"<p style=color:{'green>You won' if won else 'red>You lost'}!</p>")
     return redirect("/")
 
 @app.route("/reset")
