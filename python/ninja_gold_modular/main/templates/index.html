@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+    <div class="wrapper">
+        <div class="balance">
+            <label for="gold">$</label>
+            <!-- gold value as readonly input tag instead of span-->
+            <input type="text" id="gold" value="{{request.session.gold}}" readonly/>
+            <!-- <span id="gold">{{request.session.gold}}</span> -->
+        </div>
+        <div class="locations">
+            {% for location,range in gold_map.items %}<!-- unpack the keys and values from gold_map-->
+            <!-- can remove hidden input and csrf_token if passing location through url -->
+            <form action="/{{location}}" class="location"><!-- to pass location through url -->
+            <!-- <form action="/process" method="post" class="location"> --><!-- to pass location through post request -->
+                <!-- {% csrf_token %} -->
+                <h2>{{location}}</h2>
+                <p>Earns {{range.0}} to {{range.1}} gold!</p><!-- access the min and max of the range by index-->
+                <!-- <input type="hidden" name="location" value="{{location}}"/> -->
+                <button>Find Gold!</button>
+            </form>
+            {% endfor %}
+        </div>
+        <div class="activities-container">
+            <label for="activities">Activities</label>
+            <!-- activity list as readonly textarea instead of div-->
+            <!-- <textarea name="activities" id="activities" readonly>{{request.session.activities|join:"&#13;&#10;"}}</textarea> -->
+            <!--  div with for loop is better if you want to have different colored activity messages -->
+            <div name="activities" id="activities">
+                {% for activity in request.session.activities reversed %}
+                <p>{{activity}}</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
