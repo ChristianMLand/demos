@@ -6,8 +6,6 @@ gold_map = {#dictionary that maps locations to the range of gold you can earn
     "cave" : (5,10),
     "house" : (2,5),
     "casino" : (-50,50),
-    "getrich": (100,200), #can add as many locations as we want and everything will work right away!
-    "getpoor": (-200,-100),
 }
 
 def index(request):
@@ -16,7 +14,7 @@ def index(request):
         request.session["gold"] = 0
     return render(request,"index.html",{"gold_map":gold_map})
 
-def process_money(request, location=""):#allow for passing location through url
+def process_money(request, location=""):#allow for passing location through url (get request)
     if request.method == "POST":#allow for passing location through post request
         location = request.POST["location"]
     if location in gold_map:#only perform logic if recieved a valid location

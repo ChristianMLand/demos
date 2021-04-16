@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="wrapper">
+        <div class="balance">
+            <label for="gold">$</label>
+            <input type="text" id="gold" value="{{session['gold']}}" readonly/>
+        </div>
+        <div class="locations">
+            {% for location,(min,max) in gold_map.items() %}
+            <form action="/{{location}}" class="location">
+                <h2>{{location}}</h2>
+                <p>Earns {{min}} to {{max}} gold!</p>
+                <button>Find Gold!</button>
+            </form>
+            {% endfor %}
+        </div>
+        <div class="activities-container">
+            <span>Activities</span>
+            <div name="activities" id="activities">
+                {% for activity in session["activities"]|reverse %}
+                <p>{{activity}}</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
