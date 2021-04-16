@@ -1,0 +1,104 @@
+webfund notes-
+more vs code extensions:
+browser preview:opens tab in vs code to preview browser (good in combination with live server)
+css peek:makes editing css quick and easy
+live server: creates a server that will live refresh your html page when you save
+live share: creates a shared workspace so you can work with other students
+
+
+http = hypertext transfer protocol
+html = hypertext markup language
+dom = document object model
+api = application programming interface
+
+closing tags and self closing tags
+tags that work as containers have closing tags
+tags that are self contained do not
+examples of self closing:
+<br /> = a line break tag (used for dropping content onto a new line, better to use CSS instead)
+<hr /> = horizontal rule tag (horizontal line, purely used as a visual seperator)
+<img /> = displays an image
+<input /> = creates an input a user can interact with
+
+https://www.w3schools.com/tags/att_input_type.asp
+types of inputs: 
+button,checkbox,color,date,datetime-local,email,file,hidden,image,url
+month,number,password,radio,range,reset,search,submit,tel,text,time,week
+
+https://www.w3schools.com/tags/tag_input.asp
+useful attributes for input tags:
+autocomplete,autofocus,checked(for checkboxes),accept(for files),disabled,form(connects input to a form if its not inside it),
+formnovalidate(prevents builtin html validation when the form is submitted),list(connects to datalist),max,maxlength,min,minlength,
+step,multiple,name,pattern,placeholder,readonly,required,value
+
+a tags (anchor tags) href = hypertext reference
+
+<h1> through <h6> makes text of varying font sizes and weights but should not be used solely for that purpose
+accessability and semantics are important and you should consider the actual importance of the text, if you just want big text
+but the content is not actually important enough to be considered a header then do it via css instead with a span or p tag
+<strong> makes text bold (same as <b>)
+and <em> makes text italic (same as <i>)
+<mark> highlights text
+however they also shouldn't be used solely for the purpose of making text bold or italic, that should be done with css
+you should use them more for accessability and semantics to bring attention to certain words or phrases in your text
+
+<table> tag should have a <thead> and a <tbody> for better organization and functionality (option tfoot)
+
+*form has an oninput attribute that can modify/calculate things based on it's inputs ids
+<output> tag can be used in conjunction with this
+
+block vs inline tags: https://www.w3schools.com/html/html_blocks.asp
+block elements take up their own line, inline do not
+block elements: div,p,ul,ol,li,table,form,h1-h6,hr,main,nav,header,footer
+inline elements: a,br,button,img,input,label,select,textarea,span
+
+*do not use <br> tag for spacing elements or making inline elements be on their own line!!*
+*instead either wrap it in a block element or use css*
+
+
+cool html tags to look into:
+<colgroup> and <col> (col takes a span attribute similar to css grid) are useful for targeting a specific column to style 
+<optgroup> to have labeled subgroups of <option> tags in a <select> tag
+<datalist> allow autocomplete suggestions when typing into an input tag
+<map> and <area> allow clicking of specific points on an image to do different things
+<canvas> tag used for drawing graphics via javascript
+<dl> description list used with <dt>(desc term/topic) and <dd>(desc data/describe) similar to <ul> or <ol>
+<details> creates a content container that can be clicked to show or hide, used with <summary>
+<dialog> can be used to create modals (dialog.showModal() and dialog.close() in js with dialog being the selected dialog element) ::backdrop css selector
+<fieldset> and <legend> to group form inputs together, allows disabling all of them at once and is better for accessibility
+<iframe> used for embedding external pages
+<meter> works similar to a range without being a modifiable input, <progress> should be used if intended to be a progress bar
+<picture> allows multiple image sources depending on different factors (usually screen size) and picks the first source that matches similar to <video> and <audio>
+
+
+CSS:
+#ids should be unique, .classes can be reused
+https://www.w3schools.com/css/css_specificity.asp
+
+*,inherited values = 0
+element,pseudo-element = 1
+attribute,class,pseudo-class: 10
+id = 100
+inline = 1000
+
+internal css is more specific than external
+read top-down so last selector is what is used
+* !important ignores specificity and applies the style anyways (usually bad practice to use it)*
+
+
+
+https://www.w3schools.com/css/css_pseudo_elements.asp
+cool css selectors:
+element[attribute],element[attribute="value"],element[attribute~="value"],element[attribute*="value"],
+::marker(used for list decorators),::selection,::before,::after,
+
+https://www.w3schools.com/css/css_combinators.asp
+
+https://www.w3schools.com/cssref/tryit.asp?filename=trycss_scroll_behavior
+
+cool css attributes: 
+counter-increment(used with counter-reset and content),
+
+
+
+
