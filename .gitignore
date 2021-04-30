@@ -1,5 +1,10 @@
 demos.txt
-
+webfund/exam-k
+webfund/css/portfolio
+webfund/css/profile-page
+webfund/css/riot-demo
+webfund/html
+webfund/js/algos
 # Visual Studio Code # 
 .vscode/* 
 !.vscode/settings.json 

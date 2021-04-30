@@ -91,3 +91,9 @@ span{
     border: 1px solid #eee;
     overflow: hidden;
 }
+.green{
+    color: rgb(27, 124, 77);
+}
+.red{
+    color: rgb(243, 20, 68);
+}
