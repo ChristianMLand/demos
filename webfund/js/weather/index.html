@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="wrapper">
+        <div id="nav">
+            <h1>DojoWeather</h1>
+            <ul>
+                <li onclick="alert('Loading weather report...')">Burbank</li>
+                <li onclick="alert('Loading weather report...')">Chicago</li>
+                <li onclick="alert('Loading weather report...')">Dallas</li>
+            </ul>
+        </div>
+        <div id="main">
+            <div id="main-upper">
+                <h2>San Jose</h2>
+                <label>
+                    Show temperature in
+                    <select autocomplete="off" onchange="toggleTemps(this.value)">
+                        <option value="c">Celsius</option>
+                        <option value="f">Fahrenheit</option>
+                    </select>
+                </label>
+            </div>
+            <div id="main-lower">
+                <div class="weather-card">
+                    <h3>Today</h3>
+                    <img src="./assets/some_rain.png" alt="some_rain">
+                    <p>Some rain</p>
+                    <div>
+                        <span class="high">23.9</span>
+                        <span class="low">18.3</span>
+                    </div>
+                </div>
+                <div class="weather-card">
+                    <h3>Tomorrow</h3>
+                    <img src="./assets/some_sun.png" alt="some_rain">
+                    <p>Some sun</p>
+                    <div>
+                        <span class="high">26.7</span>
+                        <span class="low">18.9</span>
+                    </div>
+                </div>
+                <div class="weather-card">
+                    <h3>Friday</h3>
+                    <img src="./assets/some_clouds.png" alt="some_rain">
+                    <p>Some clouds</p>
+                    <div>
+                        <span class="high">20.6</span>
+                        <span class="low">16.1</span>
+                    </div>
+                </div>
+                <div class="weather-card">
+                    <h3>Saturday</h3>
+                    <img src="./assets/some_sun.png" alt="some_rain">
+                    <p>Some sun</p>
+                    <div>
+                        <span class="high">25.6</span>
+                        <span class="low">21.1</span>
+                    </div>
+                </div>
+            </div>
+            <div id="alert">
+                <img src="./assets/cookie.png" alt="cookie">
+                <div>
+                    <h4>Stop! Cookie time</h4>
+                    <p>We use cookies (sadly not the edible ones) to personalize content and ads, to provide social media features and to analyze our traffic.<a href="#">Read more</a></p>
+                </div>
+                <button onclick="document.getElementById('alert').remove()">I Accept</button>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
