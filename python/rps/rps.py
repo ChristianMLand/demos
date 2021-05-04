@@ -17,16 +17,15 @@ def rock_paper_scissors(total_rounds=5):
         while user_move not in moves:#make sure the user picked a valid move
             print("Please pick a valid move!")
             user_move = input("Move: ")
-        if moves[comp_move] == user_move:#comp beats user
+        if moves[comp_move] == user_move:#comp beats player
             comp_wins += 1
-            print(f"{comp_move} beats {user_move}")
-        elif moves[user_move] == comp_move:#user beats comp
+            print(f"Comp: {comp_move} beats Player: {user_move}")
+        elif moves[user_move] == comp_move:#player beats comp
             user_wins += 1
-            print(f"{user_move} beats {comp_move}")
+            print(f"Player: {user_move} beats Comp: {comp_move}")
         else:#tie
             print("tie")
-            cur_round -= 1
         cur_round += 1
     return f"Best of {total_rounds} result: Player: {user_wins} vs Comp: {comp_wins}"
 
-print(rock_paper_scissors())
+print(rock_paper_scissors(3))
