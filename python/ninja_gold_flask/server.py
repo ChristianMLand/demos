@@ -8,7 +8,7 @@ gold_map = {
     "cave" : (5,10),
     "house" : (2,5),
     "casino" : (-50,50),
-    "test": (-300,300)
+    "test": (0,300)
 }
 
 #could instead have a form to pick these values and store them in session

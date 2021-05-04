@@ -90,9 +90,10 @@ body{
     text-align: center;
 }
 .weather-card img{
-    width: 100px;
+    width: 110px;
     border-radius: 50%;
-    padding: 1rem;
+    margin: 10px;
+    background: white;
 }
 .weather-card p{
     margin-bottom: 20px;

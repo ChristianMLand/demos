@@ -1,11 +1,11 @@
 const convert= {
-    "f" : c => (9/5 * c + 32).toPrecision(2),
-    "c" : f => (5/9 * (f - 32)).toPrecision(3)
+    "C" : f => (5/9 * (f - 32)).toPrecision(3),
+    "F" : c => (9/5 * c + 32).toPrecision(2),
 }
 
 function toggleTemps(type){
-    for(let temp of document.querySelectorAll(".high,.low")){
-        temp.innerHTML = convert[type](parseFloat(temp.innerHTML))
+    for(let el of document.querySelectorAll(".high,.low")){
+        el.innerHTML = convert[type](parseFloat(el.innerHTML))
     }
 }
 
@@ -18,11 +18,11 @@ function toggleTemps(type){
 // }
 
 // function toggleTemps(type){
-//     for(let temp of document.querySelectorAll(".high,.low")){
+//     for(let el of document.querySelectorAll(".high,.low")){
 //         if(type == 'f'){
-//             temp.innerHTML = fahrenheit(parseFloat(temp.innerHTML))
+//             el.innerHTML = fahrenheit(parseFloat(el.innerHTML))
 //         } else if(type == 'c') {
-//             temp.innerHTML = celsius(parseFloat(temp.innerHTML))
+//             el.innerHTML = celsius(parseFloat(el.innerHTML))
 //         }
 //     }
 // }
