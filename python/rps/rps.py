@@ -1,15 +1,13 @@
 from random import choice
 
-moves = {#map moves to what they beat
+moves = {#map potential moves to what they beat
     'rock' : 'scissors',
-    'paper': 'rock',
-    'scissors':'paper'
+    'paper' : 'rock',
+    'scissors' : 'paper'
 }
 
 def rock_paper_scissors(total_rounds=5):
-    comp_wins = 0
-    user_wins = 0
-    cur_round = 0
+    comp_wins,user_wins,cur_round = 0,0,0
     above_half = total_rounds//2 + 1
     while comp_wins < above_half and user_wins < above_half and cur_round < total_rounds:#if player or comp wins more than half the rounds, they win
         comp_move = choice(list(moves.keys()))#get comp move
@@ -28,4 +26,4 @@ def rock_paper_scissors(total_rounds=5):
         cur_round += 1
     return f"Best of {total_rounds} result: Player: {user_wins} vs Comp: {comp_wins}"
 
-print(rock_paper_scissors(3))
+print(rock_paper_scissors())
