@@ -1,5 +1,4 @@
-from flask import Flask
-
+from flask import Flask, render_template
 app = Flask(__name__)
 
 @app.route("/")
@@ -9,6 +8,10 @@ def index():
 @app.route("/dojo")
 def dojo():
     return "Dojo"
+
+@app.route("/index")
+def html_test():
+    return render_template("index.html")
 
 @app.route("/say/<name>")
 def say(name):
@@ -22,9 +25,10 @@ def repeat(times,word):
         return word * int(times)
     return "invalid request"
 
-@app.route("/<var>")
-def error(var):
-    return "Sorry! No response. Try again."
+# @app.route("/<var>")
+# def error(var):
+#     print(var)
+#     return "Sorry! No response. Try again."
 
 if __name__=="__main__":
     app.run(debug=True)
