@@ -1,5 +1,5 @@
 import socket#builtin library for creating websockets
-from typing import Callable, Dict, List, Optional, Tuple#just used for type hints, doesn't actually affect functionality
+from typing import Callable, Dict, Optional, Tuple#just used for type hints, doesn't actually affect functionality
 
 class Flask:
     def __init__(self,import_name:str) -> None:#constructor function
@@ -9,7 +9,7 @@ class Flask:
     def route(self,path:str) -> Callable:#the @app.route decorator
         def register(func:Callable) -> Callable:#basic decorator structure/closure
             self.paths[path] = func#store path as dict key and function as value
-            return func #return func to allow chaining decorators
+            return func #return func to allow chaining decorators (assign multiple routes to a single function)
         return register
 
     def match_url(self,url:str) -> Tuple[Optional[str],Dict]:
@@ -20,8 +20,7 @@ class Flask:
             path_split = path.split("/")[1:]#split path into array and remove the first empty space character
             url_split = url.split("/")[1:]#split url into array and remove the first empty space character
             if len(path_split) == len(url_split):#check if the lengths of the arrays are the same, if they aren't then keep looking
-                for i in range(len(path_split)):
-                    a,b = path_split[i],url_split[i]
+                for a,b in zip(path_split,url_split):
                     if a != b:#check if strings match
                         if a[0] != "<" and a[-1] != ">":#check if string is a variable or not
                             break#break early and move on to next path
@@ -30,6 +29,7 @@ class Flask:
                     return path,kwargs#return matched path and variables from url
         return None,kwargs#no matching path
 
+    #TODO implement threading
     def run(self,host:str='127.0.0.1',port:int=5000,debug:bool=False) -> None:
         if debug:#currently does nothing but print this message
             print("running in debug mode")
