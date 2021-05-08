@@ -5,7 +5,7 @@ app = Flask(__name__)
 def index():
     return "Hello World"
 
-@app.route("/dojo")
+@app.route("/dojo", methods=["POST"])
 def dojo():
     return "Dojo"
 

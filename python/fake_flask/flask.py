@@ -8,6 +8,8 @@ TYPES = {
     "string" : lambda x : x if not x.isdigit() else None,
 }
 
+BASE_DIR = os.path.dirname(os.path.realpath(__file__))
+
 #TODO add support for different HTTP verbs
 class Flask:
     def __init__(self,import_name:str) -> None:#constructor function
@@ -16,12 +18,14 @@ class Flask:
 
     def route(self,path:str,methods:List[str] = ["GET"]) -> Callable:#create the @app.route decorator
         def register(func:Callable) -> Callable:#func is the function below the decorator
-            self.paths[path] = func#store path as dict key and function as value
+            self.paths[path] = methods,func#store path as dict key and function as value
             return func #return func to allow chaining decorators (assign multiple routes to a single function)
         return register
 
-    def match_url(self,url:str) -> Tuple[Optional[str],Dict]:
+    def match_url(self,method:str,url:str) -> Tuple[Optional[str],Dict]:
         for path in self.paths:#loop over all stored paths
+            if method not in self.paths[path][0]:
+                continue
             kwargs = {}
             if path == url:#if find a match exit the loop early
                 return path,kwargs#return matched path and variables from url
@@ -59,10 +63,11 @@ class Flask:
             if len(request) < 1:#break if no data recieved
                 print("shutting down server")
                 break
-            url = request.split(" ")[1]#pull requested url from request string
-            match,kwargs = self.match_url(url)#lookup requested url and return matching path and key word arguments associated with it
+            print(request)
+            # method,url = request.split(" ")[0:2]#pull requested method and url from request string
+            match,kwargs = self.match_url(*request.split(" ")[0:2])#lookup requested url and return matching path and key word arguments associated with it
             if match:#if match was found
-                response = self.paths[match](**kwargs)#pass key word arguments into associated function and get return value
+                response = self.paths[match][1](**kwargs)#pass key word arguments into associated function and get return value
                 byte_str = f"HTTP/1.1 200 OK\nContent-Type: text/html\n\n{response}\n"#pass response into string to send back to client (browser)
                 client.sendall(byte_str.encode('utf-8'))#encode to byte string and send to client 
             else:
@@ -71,11 +76,10 @@ class Flask:
             client.close()#clean up connection to client
 
 def render_template(file:str, **kwargs:Any) -> str:
-    BASE_DIR = os.path.dirname(os.path.realpath(__file__))
     with open(os.path.join(BASE_DIR,f"templates/{file}"),"r",encoding="utf-8") as f:
-        parsed_html = f.read()
         #TODO parse html file and look for {{}} and compare strings to keys in kwargs, replacing the {{}} with any values for matching keys
         #TODO parse html file and perform any template logic required (if statements and for loops), returning a new processed html str to be sent to the client
+        parsed_html = f.read()
         return parsed_html
 
 #TODO functionality
