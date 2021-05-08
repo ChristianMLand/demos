@@ -4,19 +4,17 @@ app = Flask(__name__)
 @app.route("/")
 @app.route("/index")
 def index():
-    print(request.method)
+    print(request.method, request.url)
     return render_template("index.html")
 
 @app.route("/process", methods=["POST"])
-def orocess():
-    print(request.method)
-    print(request.form)
+def process():
+    print(request.method, request.url, request.form)
     return redirect(f"/repeat/{request.form['times']}/{request.form['name']}")
 
 @app.route("/repeat/<int:times>/<string:word>")
 def repeat(times,word):
-    print(request.method)
-    print(request.form)
+    print(request.method, request.url)
     return word * times
 
 if __name__=="__main__":

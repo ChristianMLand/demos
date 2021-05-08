@@ -1,5 +1,6 @@
 import socket#builtin library for creating websockets
 import os#builtin library for navigating os filestructure
+from urllib.parse import unquote_plus
 from typing import Any, Callable, Dict, List, Optional, Tuple#builtin library used for type hints, doesn't actually affect functionality
 
 class Request:
@@ -8,6 +9,7 @@ class Request:
         self.method = None
         self.url = None
         self.protocol = None
+        self.address = None
         self.form = {}
 
 request = Request()#TODO there has to be a better way of implementing the request object...
@@ -15,7 +17,9 @@ request = Request()#TODO there has to be a better way of implementing the reques
 class Flask:
     TYPES = {
         "int" : lambda x : int(x) if x.isdigit() else None,
-        "string" : lambda x : x if not x.isdigit() else None,
+        "string" : lambda x : unquote_plus(x) if not x.isdigit() else None,#TODO str should be able to contain any characters other than slashes
+        "float" : lambda x : float(x) if x.isdigit() or x.replace('.', '', 1).isdigit() else None,
+        #TODO path type (slug formatted strings and can include slashes)
     }
 
     BASE_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -47,8 +51,8 @@ class Flask:
                         clean_a = a[1:-1]#remove <> from string
                         if ":" in a:#check to see if variable has been type cast
                             var_type,var_name = clean_a.split(":")#split parameter into the type and the name
-                            res = Flask.TYPES[var_type](b)#pass variable into converter function for its type
-                            if not res:#break if types don't match
+                            func = Flask.TYPES.get(var_type)
+                            if not func or not (res := func(b)):
                                 break
                             kwargs[var_name] = res#store parsed variable and name as key word arguments
                         else:
@@ -64,42 +68,40 @@ class Flask:
         server = socket.socket()#create socket connection
         server.bind((host,port))#bind socket to port
         server.listen(5)#have socket listen for requests on given port
-        server.listen(32)#listen for redirects on given port
         print("listening on port: ",port)
         while True:#infinitely loop to check for connections
             client,address = server.accept()#recieve client socket and ip address they connected with
-            req = client.recv(1024).decode()#recieve request from client and decode byte string
-            if len(req) < 1:#break if no data recieved
+            data = client.recv(1024).decode()#recieve request from client and decode byte string
+            if not data:#break if no data recieved
                 print("shutting down server")
                 break
-            method,url = req.split(" ")[0:2]#pull requested method and url from request string
+            method,url = data.split(" ")[0:2]#pull requested method and url from request string
             global request
+            # request.protocol = protocol
             request.client = client#store client connection in request object
-            request.method = method
-            request.url = url
+            request.method = method#request method (http verb)
+            request.url = url#requested url
+            request.address = address#client ip address
+            request.form = {}#any form data that was sent (reset to empty dict first)
             if method == "POST":
-                for s in req.split('\r\n')[-1].split("&"):#parse form data
+                for s in data.split('\r\n')[-1].split("&"):#parse form data
                     a,b = s.split("=")
                     request.form[a] = b
-            else:
-                request.form = {}
             match,kwargs = self.match_url(method,url)#lookup requested url and return matching path and key word arguments associated with it
             if match:#if match was found
                 response = self.paths[match][1](**kwargs)#pass key word arguments into associated function and get return value
-                byte_str = f"HTTP/1.1 200 OK\nContent-Type: text/html\n\n{response}\n"#pass response into string to send back to client (browser)
+                byte_str = f"HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nConnection: close\r\n\n{response}\r\n"#pass response into string to send back to client (browser)
                 client.sendall(byte_str.encode('utf-8'))#encode to byte string and send to client 
-            else:
-                byte_str = f"HTTP/1.1 404 ERR\nContent-Type: text/html\n\n404 not found\n"#error string if no match found
+            else:#TODO handle this better
+                byte_str = f"HTTP/1.1 404 ERR\r\nContent-Type: text/html\r\nConnection: close\r\n\n<h1>404 not found</h1>\r\n"#error string if no match found
                 client.sendall(byte_str.encode('utf-8'))#encode and send error string to client
             client.close()#clean up connection to client
 
 def render_template(file:str, **kwargs:Any) -> str:
     with open(os.path.join(Flask.BASE_DIR,f"templates/{file}"),"r",encoding="utf-8") as f:
-        #TODO parse html file and look for {{}} and compare strings to keys in kwargs, replacing the {{}} with any values for matching keys
-        #TODO parse html file and perform any template logic required (if statements and for loops), returning a new processed html str to be sent to the client
         parsed_html = f.read()
         return parsed_html
 
 def redirect(path:str) -> str:
     global request
-    request.client.sendall(f"HTTP/1.1 302 OK\nLocation: http://127.0.0.1:5000{path}\nConnection: close\nCache-control: private".encode('utf-8'))
+    request.client.sendall(f"HTTP/1.1 302 OK\r\nLocation: http://127.0.0.1:5000{path}\r\nConnection: close".encode('utf-8'))
