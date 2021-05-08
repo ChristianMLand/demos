@@ -10,15 +10,16 @@ TYPES = {
 
 BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 
-#TODO refactor implementation
+
 class Request:
     def __init__(self):
+        self.client = None
         self.method = None
         self.url = None
         self.protocol = None
         self.form = {}
 
-request = Request()
+request = Request()#TODO there has to be a better way of implementing the request object...
 
 class Flask:
     def __init__(self,import_name:str) -> None:#constructor function
@@ -58,22 +59,6 @@ class Flask:
                     return path,kwargs#return matched path and variables from url as key word arguments in a tuple
         return None,kwargs#no matching path
 
-    #TODO refactor, there's definitely a better way to do this...
-    @staticmethod
-    def process_req(req:str) -> None:
-        global request#global so can import into server
-        req_split = req.split('\r\n')#remove new line characters
-        method,url,protocol = req_split[0].split(" ")#parse first line
-        #TODO parse the rest of the request string
-        if method == "POST":
-            for s in req_split[-1].split("&"):#parse form data
-                a,b = s.split("=")
-                request.form[a] = b
-        #store values in request object
-        request.method = method
-        request.url = url
-        request.protocol = protocol
-
     #TODO maybe implement threading
     def run(self,host:str='127.0.0.1',port:int=5000,debug:bool=False) -> None:
         if debug:#currently does nothing but print this message
@@ -81,6 +66,7 @@ class Flask:
         server = socket.socket()#create socket connection
         server.bind((host,port))#bind socket to port
         server.listen(5)#have socket listen for requests on given port
+        server.listen(32)#listen for redirects on given port
         print("listening on port: ",port)
         while True:#infinitely loop to check for connections
             client,address = server.accept()#recieve client socket and ip address they connected with
@@ -89,7 +75,14 @@ class Flask:
                 print("shutting down server")
                 break
             method,url = req.split(" ")[0:2]#pull requested method and url from request string
-            self.process_req(req)#process req and store data into request object
+            global request
+            request.client = client#store client connection in request object
+            request.method = method
+            request.url = url
+            if method == "POST":
+                for s in req.split('\r\n')[-1].split("&"):#parse form data
+                    a,b = s.split("=")
+                    request.form[a] = b
             match,kwargs = self.match_url(method,url)#lookup requested url and return matching path and key word arguments associated with it
             if match:#if match was found
                 response = self.paths[match][1](**kwargs)#pass key word arguments into associated function and get return value
@@ -107,6 +100,6 @@ def render_template(file:str, **kwargs:Any) -> str:
         parsed_html = f.read()
         return parsed_html
 
-#TODO functionality
 def redirect(path:str) -> str:
-    pass
+    global request
+    request.client.sendall(f"HTTP/1.1 302 Encryption Required\nLocation: http://127.0.0.1:5000{path}\nConnection: close\nCache-control: private".encode('utf-8'))

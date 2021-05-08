@@ -7,9 +7,8 @@ def index():
 
 @app.route("/dojo", methods=["POST"])
 def dojo():
-    print(request.method)
     print(request.form["name"])
-    return request.form
+    return redirect("/index")
 
 @app.route("/index")
 def html_test():
