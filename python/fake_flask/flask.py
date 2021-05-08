@@ -10,7 +10,17 @@ TYPES = {
 
 BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 
-#TODO add support for different HTTP verbs
+
+#TODO refactor implementation
+class Request:
+    def __init__(self):
+        self.method = None
+        self.url = None
+        self.protocol = None
+        self.form = {}
+
+request = Request()
+
 class Flask:
     def __init__(self,import_name:str) -> None:#constructor function
         self.import_name = import_name#currently not used
@@ -49,6 +59,19 @@ class Flask:
                     return path,kwargs#return matched path and variables from url as key word arguments in a tuple
         return None,kwargs#no matching path
 
+    #TODO refactor, there's definitely a better way to do this...
+    def process_req(self,req:str) -> Dict:
+        global request#global so can import into server
+        req_split = req.split('\r\n')
+        method,url,protocol = req_split[0].split(" ")
+        if method == "POST":
+            for s in req_split[-1].split("&"):
+                a,b = s.split("=")
+                request.form[a] = b
+        request.method = method
+        request.url = url
+        request.protocol = protocol
+
     #TODO maybe implement threading
     def run(self,host:str='127.0.0.1',port:int=5000,debug:bool=False) -> None:
         if debug:#currently does nothing but print this message
@@ -59,13 +82,13 @@ class Flask:
         print("listening on port: ",port)
         while True:#infinitely loop to check for connections
             client,address = server.accept()#recieve client socket and ip address they connected with
-            request = client.recv(1024).decode()#recieve request from client and decode byte string
-            if len(request) < 1:#break if no data recieved
+            req = client.recv(1024).decode()#recieve request from client and decode byte string
+            if len(req) < 1:#break if no data recieved
                 print("shutting down server")
                 break
-            print(request)
-            # method,url = request.split(" ")[0:2]#pull requested method and url from request string
-            match,kwargs = self.match_url(*request.split(" ")[0:2])#lookup requested url and return matching path and key word arguments associated with it
+            method,url = req.split(" ")[0:2]#pull requested method and url from request string
+            self.process_req(req)#process req and store data into request object
+            match,kwargs = self.match_url(method,url)#lookup requested url and return matching path and key word arguments associated with it
             if match:#if match was found
                 response = self.paths[match][1](**kwargs)#pass key word arguments into associated function and get return value
                 byte_str = f"HTTP/1.1 200 OK\nContent-Type: text/html\n\n{response}\n"#pass response into string to send back to client (browser)

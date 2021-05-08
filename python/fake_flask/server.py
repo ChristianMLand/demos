@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect
+from flask import Flask, render_template, redirect, request
 app = Flask(__name__)
 
 @app.route("/")
@@ -7,10 +7,13 @@ def index():
 
 @app.route("/dojo", methods=["POST"])
 def dojo():
-    return "Dojo"
+    print(request.method)
+    print(request.form["name"])
+    return request.form
 
 @app.route("/index")
 def html_test():
+    print(request.method)
     return render_template("index.html")
 
 @app.route("/say/<string:name>")

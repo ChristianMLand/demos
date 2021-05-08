@@ -9,8 +9,9 @@
 <body>
     <h1>HELLO WORLD</h1>
     <p>This is html!</p>
-    <form action="/dojo" method="POST">
+    <form action="/dojo" method="POST" enctype="application/x-www-form-urlencoded">
         <input type="hidden" name="test_name" value="test_val">
+        <input type="text" name="name" value="chris">
         <button type="submit">Submit</button>
     </form>
 </body>
