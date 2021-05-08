@@ -1,6 +1,6 @@
 import socket#builtin library for creating websockets
-import os
-from typing import Any, Callable, Dict, List, Optional, Tuple#just used for type hints, doesn't actually affect functionality
+import os#builtin library for navigating os filestructure
+from typing import Any, Callable, Dict, List, Optional, Tuple#builtin library used for type hints, doesn't actually affect functionality
 
 #TODO maybe make this a class attribute?
 TYPES = {
@@ -9,7 +9,6 @@ TYPES = {
 }
 
 BASE_DIR = os.path.dirname(os.path.realpath(__file__))
-
 
 #TODO refactor implementation
 class Request:
@@ -60,14 +59,17 @@ class Flask:
         return None,kwargs#no matching path
 
     #TODO refactor, there's definitely a better way to do this...
-    def process_req(self,req:str) -> Dict:
+    @staticmethod
+    def process_req(req:str) -> None:
         global request#global so can import into server
-        req_split = req.split('\r\n')
-        method,url,protocol = req_split[0].split(" ")
+        req_split = req.split('\r\n')#remove new line characters
+        method,url,protocol = req_split[0].split(" ")#parse first line
+        #TODO parse the rest of the request string
         if method == "POST":
-            for s in req_split[-1].split("&"):
+            for s in req_split[-1].split("&"):#parse form data
                 a,b = s.split("=")
                 request.form[a] = b
+        #store values in request object
         request.method = method
         request.url = url
         request.protocol = protocol
