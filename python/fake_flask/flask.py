@@ -2,15 +2,6 @@ import socket#builtin library for creating websockets
 import os#builtin library for navigating os filestructure
 from typing import Any, Callable, Dict, List, Optional, Tuple#builtin library used for type hints, doesn't actually affect functionality
 
-#TODO maybe make this a class attribute?
-TYPES = {
-    "int" : lambda x : int(x) if x.isdigit() else None,
-    "string" : lambda x : x if not x.isdigit() else None,
-}
-
-BASE_DIR = os.path.dirname(os.path.realpath(__file__))
-
-
 class Request:
     def __init__(self):
         self.client = None
@@ -22,6 +13,13 @@ class Request:
 request = Request()#TODO there has to be a better way of implementing the request object...
 
 class Flask:
+    TYPES = {
+        "int" : lambda x : int(x) if x.isdigit() else None,
+        "string" : lambda x : x if not x.isdigit() else None,
+    }
+
+    BASE_DIR = os.path.dirname(os.path.realpath(__file__))
+
     def __init__(self,import_name:str) -> None:#constructor function
         self.import_name = import_name#currently not used
         self.paths = {}#dict to keep track of registered paths
@@ -49,7 +47,7 @@ class Flask:
                         clean_a = a[1:-1]#remove <> from string
                         if ":" in a:#check to see if variable has been type cast
                             var_type,var_name = clean_a.split(":")#split parameter into the type and the name
-                            res = TYPES[var_type](b)#pass variable into converter function for its type
+                            res = Flask.TYPES[var_type](b)#pass variable into converter function for its type
                             if not res:#break if types don't match
                                 break
                             kwargs[var_name] = res#store parsed variable and name as key word arguments
@@ -94,7 +92,7 @@ class Flask:
             client.close()#clean up connection to client
 
 def render_template(file:str, **kwargs:Any) -> str:
-    with open(os.path.join(BASE_DIR,f"templates/{file}"),"r",encoding="utf-8") as f:
+    with open(os.path.join(Flask.BASE_DIR,f"templates/{file}"),"r",encoding="utf-8") as f:
         #TODO parse html file and look for {{}} and compare strings to keys in kwargs, replacing the {{}} with any values for matching keys
         #TODO parse html file and perform any template logic required (if statements and for loops), returning a new processed html str to be sent to the client
         parsed_html = f.read()
@@ -102,4 +100,4 @@ def render_template(file:str, **kwargs:Any) -> str:
 
 def redirect(path:str) -> str:
     global request
-    request.client.sendall(f"HTTP/1.1 302 Encryption Required\nLocation: http://127.0.0.1:5000{path}\nConnection: close\nCache-control: private".encode('utf-8'))
+    request.client.sendall(f"HTTP/1.1 302 OK\nLocation: http://127.0.0.1:5000{path}\nConnection: close\nCache-control: private".encode('utf-8'))
