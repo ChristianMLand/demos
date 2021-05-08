@@ -1,6 +1,6 @@
 import socket#builtin library for creating websockets
 import os
-from typing import Any, Callable, Dict, Optional, Tuple#just used for type hints, doesn't actually affect functionality
+from typing import Any, Callable, Dict, List, Optional, Tuple#just used for type hints, doesn't actually affect functionality
 
 #TODO maybe make this a class attribute?
 TYPES = {
@@ -8,12 +8,13 @@ TYPES = {
     "string" : lambda x : x if not x.isdigit() else None,
 }
 
+#TODO add support for different HTTP verbs
 class Flask:
     def __init__(self,import_name:str) -> None:#constructor function
         self.import_name = import_name#currently not used
         self.paths = {}#dict to keep track of registered paths
 
-    def route(self,path:str) -> Callable:#create the @app.route decorator
+    def route(self,path:str,methods:List[str] = ["GET"]) -> Callable:#create the @app.route decorator
         def register(func:Callable) -> Callable:#func is the function below the decorator
             self.paths[path] = func#store path as dict key and function as value
             return func #return func to allow chaining decorators (assign multiple routes to a single function)
@@ -76,3 +77,7 @@ def render_template(file:str, **kwargs:Any) -> str:
         #TODO parse html file and look for {{}} and compare strings to keys in kwargs, replacing the {{}} with any values for matching keys
         #TODO parse html file and perform any template logic required (if statements and for loops), returning a new processed html str to be sent to the client
         return parsed_html
+
+#TODO functionality
+def redirect(path:str) -> str:
+    pass
