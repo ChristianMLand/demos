@@ -81,6 +81,8 @@ class Flask:
                 for s in req.split('\r\n')[-1].split("&"):#parse form data
                     a,b = s.split("=")
                     request.form[a] = b
+            else:
+                request.form = {}
             match,kwargs = self.match_url(method,url)#lookup requested url and return matching path and key word arguments associated with it
             if match:#if match was found
                 response = self.paths[match][1](**kwargs)#pass key word arguments into associated function and get return value

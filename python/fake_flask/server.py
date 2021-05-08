@@ -16,6 +16,7 @@ def orocess():
 @app.route("/repeat/<int:times>/<string:word>")
 def repeat(times,word):
     print(request.method)
+    print(request.form)
     return word * times
 
 if __name__=="__main__":
