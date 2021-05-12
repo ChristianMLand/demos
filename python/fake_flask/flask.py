@@ -4,22 +4,20 @@ from urllib.parse import unquote_plus
 from typing import Any, Callable, Dict, List, Optional, Tuple#builtin library used for type hints, doesn't actually affect functionality
 
 class Request:
-    def __init__(self):
-        self.client = None
-        self.method = None
-        self.url = None
-        self.protocol = None
-        self.address = None
+    def update(self,client,method,url,address):
+        self.client = client
+        self.method = method
+        self.url = url
+        self.address = address
         self.form = {}
 
-request = Request()#TODO there has to be a better way of implementing the request object...
+request = Request()
 
 class Flask:
     TYPES = {
         "int" : lambda x : int(x) if x.isdigit() else None,
         "string" : lambda x : unquote_plus(x) if not x.isdigit() else None,#TODO str should be able to contain any characters other than slashes
         "float" : lambda x : float(x) if x.isdigit() or x.replace('.', '', 1).isdigit() else None,
-        #TODO path type (slug formatted strings and can include slashes)
     }
 
     BASE_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -72,11 +70,7 @@ class Flask:
                 break
             method,url = data.split(" ")[0:2]#pull requested method and url from request string
             global request
-            request.client = client#store client connection in request object
-            request.method = method#request method (http verb)
-            request.url = url#requested url
-            request.address = address#client ip address
-            request.form = {}#any form data that was sent (reset to empty dict first)
+            request.update(client=client,method=method,url=url,address=address)
             if method == "POST":
                 for s in data.split('\r\n')[-1].split("&"):#parse form data
                     a,b = s.split("=")
