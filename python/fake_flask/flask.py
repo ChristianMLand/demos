@@ -35,25 +35,23 @@ class Flask:
     def match_url(self,method:str,url:str) -> Tuple[Optional[str],Dict]:
         for key in self.paths:#loop over all stored paths
             path,*methods = key#destructure key containing path and methods
-            if method not in methods:#if methods don't match move on to next key
-                continue
-            if path == url:#if find a match then return early
-                return self.paths[key]()#return response returned from matched path's function
-            kwargs = {}#if a potential match exists at this point then it must have variables in its path
-            path_split,url_split = path.split("/"),url.split("/")#split path into array
-            if len(path_split) == len(url_split):#check if the lengths of the arrays are the same, if they aren't then keep looking
-                for i in range(1,len(path_split)):
-                    a,b = path_split[i],url_split[i]
-                    if a != b:#check if strings match and are not empty
-                        if not a or a[0] != "<" and a[-1] != ">":#check if string is a variable or not
-                            break
-                        if (a := a[1:-1]) and ":" in a:
-                            var_type,var_name = a.split(":")
-                            if var_type in Flask.TYPES:
-                                a,b = var_name,Flask.TYPES[var_type](b)
-                        kwargs[a] = b
-                else:#runs if loop completes without breaking
-                    return self.paths[key](**kwargs)#return response returned from matched path's function
+            if method in methods:#if methods don't match move on to next key
+                if path == url:#if find a match then return early
+                    return self.paths[key]()#return response returned from matched path's function
+                kwargs = {}#if a potential match exists at this point then it must have variables in its path
+                path_split,url_split = path.split("/"),url.split("/")#split path into array
+                if len(path_split) == len(url_split):#check if the lengths of the arrays are the same, if they aren't then keep looking
+                    for i in range(1,len(path_split)):
+                        a,b = path_split[i],url_split[i]
+                        if a != b:#check if strings match
+                            if not a or a[0] != "<" and a[-1] != ">":#check if string is a variable or not
+                                break
+                            if (a := a[1:-1]) and ":" in a:
+                                var_type,a = a.split(":")
+                                b = Flask.TYPES[var_type](b) if var_type in Flask.TYPES else b
+                            kwargs[a] = b
+                    else:#runs if loop completes without breaking
+                        return self.paths[key](**kwargs)#return response returned from matched path's function
 
     def run(self,host:str='127.0.0.1',port:int=5000,debug:bool=False) -> None:
         if debug:#currently does nothing but print this message
@@ -64,8 +62,7 @@ class Flask:
         print("listening on port: ",port)
         while True:#infinitely loop to check for connections
             client,address = server.accept()#recieve client socket and ip address they connected with
-            data = client.recv(1024).decode()#recieve request from client and decode byte string
-            if not data:#break if no data recieved
+            if not (data := client.recv(1024).decode()):#break if no data recieved
                 print("shutting down server")
                 break
             method,url = data.split(" ")[0:2]#pull requested method and url from request string
@@ -75,8 +72,7 @@ class Flask:
                 for s in data.split('\r\n')[-1].split("&"):#parse form data
                     a,b = s.split("=")
                     request.form[a] = b
-            response = self.match_url(method,url)#lookup requested url and return matching path and key word arguments associated with it
-            if response:#if match was found
+            if (response := self.match_url(method,url)):#if match was found
                 byte_str = f"HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nConnection: close\r\n\n{response}\r\n"#pass response into string to send back to client (browser)
                 client.sendall(byte_str.encode('utf-8'))#encode to byte string and send to client 
             else:#TODO handle this better
@@ -86,8 +82,7 @@ class Flask:
 
 def render_template(file:str, **kwargs:Any) -> str:
     with open(os.path.join(Flask.BASE_DIR,f"templates/{file}"),"r",encoding="utf-8") as f:
-        parsed_html = f.read()
-        return parsed_html
+        return f.read()
 
 def redirect(path:str) -> str:
     global request
