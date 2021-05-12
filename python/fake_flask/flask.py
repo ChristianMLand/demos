@@ -4,8 +4,7 @@ from urllib.parse import unquote_plus
 from typing import Any, Callable, Dict, List, Optional, Tuple#builtin library used for type hints, doesn't actually affect functionality
 
 class Request:
-    def update(self,client,method,url,address):
-        self.client = client
+    def update(self,method,url,address):
         self.method = method
         self.url = url
         self.address = address
@@ -48,7 +47,8 @@ class Flask:
                                 break
                             if (a := a[1:-1]) and ":" in a:
                                 var_type,a = a.split(":")
-                                b = Flask.TYPES[var_type](b) if var_type in Flask.TYPES else b
+                                if not (b := Flask.TYPES[var_type](b) if var_type in Flask.TYPES else b):
+                                    break
                             kwargs[a] = b
                     else:#runs if loop completes without breaking
                         return self.paths[key](**kwargs)#return response returned from matched path's function
@@ -66,24 +66,21 @@ class Flask:
                 print("shutting down server")
                 break
             method,url = data.split(" ")[0:2]#pull requested method and url from request string
-            global request
-            request.update(client=client,method=method,url=url,address=address)
+            request.update(method=method,url=url,address=address)
             if method == "POST":
                 for s in data.split('\r\n')[-1].split("&"):#parse form data
                     a,b = s.split("=")
                     request.form[a] = b
-            if (response := self.match_url(method,url)):#if match was found
-                byte_str = f"HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nConnection: close\r\n\n{response}\r\n"#pass response into string to send back to client (browser)
-                client.sendall(byte_str.encode('utf-8'))#encode to byte string and send to client 
-            else:#TODO handle this better
-                byte_str = f"HTTP/1.1 404 ERR\r\nContent-Type: text/html\r\nConnection: close\r\n\n<h1>404 not found</h1>\r\n"#error string if no match found
-                client.sendall(byte_str.encode('utf-8'))#encode and send error string to client
+            if not (resp := self.match_url(method,url)):
+                resp = f"HTTP/1.1 404 ERR\r\nContent-type: text/html\r\nConnection: close\r\n\n<h1>404 not found</h1>"
+            elif not resp.startswith("HTTP/1.1"):#TODO clean to prevent injection
+                resp = f"HTTP/1.1 200 OK\r\nContent-type: text/plain\r\nConnection: close\r\n\n{resp}"
+            client.sendall(resp.encode('utf-8'))#encode to byte string and send to client 
             client.close()#clean up connection to client
 
 def render_template(file:str, **kwargs:Any) -> str:
     with open(os.path.join(Flask.BASE_DIR,f"templates/{file}"),"r",encoding="utf-8") as f:
-        return f.read()
+        return f"HTTP/1.1 200 OK\r\nContent-type: text/html\r\nConnection: close\r\n\n{f.read()}"
 
 def redirect(path:str) -> str:
-    global request
-    request.client.sendall(f"HTTP/1.1 302 OK\r\nLocation: http://127.0.0.1:5000{path}\r\nConnection: close".encode('utf-8'))
+    return f"HTTP/1.1 302 OK\r\nLocation: http://127.0.0.1:5000{path}"
