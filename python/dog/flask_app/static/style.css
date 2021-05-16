@@ -1,0 +1,87 @@
+*{
+    margin: 0;
+    padding: 0;
+    font-family: arial;
+    box-sizing: border-box;
+}
+form{
+    min-width: 300px;
+    text-align: center;
+}
+fieldset{
+    padding: 1.5rem;
+}
+button{
+    padding: 0.25rem 1rem;
+    background-color: transparent;
+    color: #61c261;
+    border: 2px solid #61c261;
+    transition: 2500 0% ease;
+}
+button:hover{
+    background: #61c261;
+    color: white;
+}
+label{
+    margin-right: 10px;
+    text-align: left;
+}
+
+.form-group{
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 0;
+    font-size: 18px;
+}
+table,form *{
+    font-size: 24px;
+}
+legend{
+    font-size: 2rem;
+}
+#wrapper{
+    width: 30%;
+    margin: 0 auto;
+    margin-top: 10vh;
+}
+#wrapper>div{
+    display: flex;
+    justify-content: space-between;
+    margin: 40px 0;
+}
+#nav-right{
+    display: flex;
+    justify-content: space-between;
+    width: 150px;
+    align-items: center;
+}
+#nav-left h1{
+    text-align: left;
+}
+label{
+    flex: 1;
+}
+input{
+    flex:2;
+}
+h1{
+    text-align: center;
+    margin-bottom: 50px;
+}
+table{
+    border-collapse: collapse;
+    margin: auto;
+    width: 100%;
+    margin-bottom: 50px;
+}
+th,td{
+    padding: 0.5rem;
+    border: 1px solid #c2c2c2;
+}
+th{
+    background: #5c5c62;
+    color: white;
+}
+tbody>:nth-child(2n){
+    background: #e7e7e7;
+}
