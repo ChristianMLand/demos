@@ -25,7 +25,9 @@ class Schema:
     @classmethod
     def get_all(cls):
         query = f"SELECT * FROM `{cls.table}`"
-        return connectToMySQL(cls.db).query_db(query)
+        res =  connectToMySQL(cls.db).query_db(query)
+        print(query,res)
+        return res
 
     @classmethod
     def get_one(cls,**data):

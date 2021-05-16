@@ -9,5 +9,23 @@
 <body>
     <h1>{{dog.name}}</h1>
     <p>Type: {{dog.type}}</p>
+    <p>Current toys:</p>
+    <ul>
+    {% for toy in owned_toys %}
+        <li>{{toy.name}} <a href="/dogs/{{dog.id}}/remove-toy/{{toy.id}}">remove</a></li>
+    {% endfor %}
+    </ul>
+    <form action="/dogs/{{dog.id}}/add-toy" method="POST">
+        <h2>Give toy:</h2>
+        <label for="toy">Toy: </label>
+        <select id="toy" name="toy_id">
+        {% for toy in all_toys %}
+            {% if toy not in owned_toys %}
+                <option value="{{toy.id}}">{{toy.name}}</option>
+            {% endif %}
+        {% endfor %}
+        </select>
+        <button>Give</button>
+    </form>
 </body>
 </html>

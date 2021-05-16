@@ -5,5 +5,5 @@ class Toy(Schema):
     def __init__(self, toy_id):
         super(toy_id)
     
-    table = "toys"
+    table = "dog_toys"
     db = "dogs_db"
