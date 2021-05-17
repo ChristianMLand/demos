@@ -4,7 +4,7 @@ class Schema:
     def __init__(self,row_id):
         self.id = row_id
 
-    @staticmethod
+    @staticmethod#can be called either by the class directly or an instance of the class
     def format_data(columns):
         cols = [f'`{col}`' for col in columns]
         vals = [f'%({col})s' for col in columns]
@@ -32,4 +32,10 @@ class Schema:
     def delete(cls, **data):
         cols,vals = cls.format_data(data.keys())
         query = f"DELETE FROM `{cls.table}` WHERE {' AND '.join(f'{col}={val}' for col,val in zip(cols,vals))}"
+        return connectToMySQL(cls.db).query_db(query,data)
+
+    @classmethod
+    def join_to(cls, cls2, **data):
+        cols,vals = cls.format_data(data.keys())
+        query = f"SELECT * FROM `{cls.table}` JOIN `{cls2.table}` ON `{cls2.table}_id`=`{cls2.table}`.id {'WHERE '+' AND'.join(f' {col}={val}' for col,val in zip(cols,vals)) if data else ''}"
         return connectToMySQL(cls.db).query_db(query,data)
