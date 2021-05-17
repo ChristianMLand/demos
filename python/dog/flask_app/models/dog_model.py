@@ -5,10 +5,6 @@ from flask_app import db
 class Dog(Schema):
     def __init__(self, dog_id):
         super(dog_id)
-
-    # @property#can access the table from either the class or instance and also cannot change it
-    # def table(self):
-    #     return "dogs"
     
     table = "dogs"
 

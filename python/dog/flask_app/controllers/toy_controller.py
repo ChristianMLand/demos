@@ -1,6 +1,5 @@
 from flask_app import app
-from flask import redirect, request
-
+from flask import redirect, request, render_template
 from flask_app.models.toy_model import Toy
 
 #---------------Render Routes-------------------#
