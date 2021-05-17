@@ -6,9 +6,11 @@ class Dog(Schema):
     def __init__(self, dog_id):
         super(dog_id)
 
-    @property#can access the table from either the class or instance and also cannot change it
-    def table(self):
-        return "dogs"
+    # @property#can access the table from either the class or instance and also cannot change it
+    # def table(self):
+    #     return "dogs"
+    
+    table = "dogs"
 
     @classmethod
     def add_toy(cls, **data):

@@ -20,6 +20,7 @@ class Schema:
     @classmethod
     def retrieve(cls, **data):#if nothing is passed in select all, otherwise filters by whatever keyword arguments are passed in
         cols,vals = cls.format_data(data.keys())
+        print(cls.table)
         query = f"SELECT * FROM `{cls.table}` {'WHERE '+' AND'.join(f' {col}={val}' for col,val in zip(cols,vals)) if data else ''}"
         return connectToMySQL(db).query_db(query,data)
 #-------------------Update---------------------#

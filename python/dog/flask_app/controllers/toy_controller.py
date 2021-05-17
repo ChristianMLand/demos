@@ -5,7 +5,7 @@ from flask_app.models.toy_model import Toy
 
 #---------------Render Routes-------------------#
 @app.route('/')
-def index():
+def all_toys():
     return render_template('all_toys.html', all_toys=Toy.retrieve())
 
 @app.route('/dogs/<int:toy_id>')

@@ -5,6 +5,8 @@ class Toy(Schema):
     def __init__(self, toy_id):
         super(toy_id)
     
-    @property
-    def table(self):
-        return "dog_toys"
+    # @property
+    # def table(self):
+    #     return "dog_toys"
+
+    table = "dog_toys"
