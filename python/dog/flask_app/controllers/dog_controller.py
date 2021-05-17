@@ -10,9 +10,12 @@ def index():
 
 @app.route('/dogs/<int:dog_id>')
 def show_dog(dog_id):
+    dog_from_db = Dog.retrieve(id=dog_id)[0]
+    this_dog = Dog(dog_from_db)
     context = {
-        "dog" : Dog(Dog.retrieve(id=dog_id)[0]),
+        "dog" : this_dog,
         "all_toys": Toy.retrieve(),
+        "owned_toys": this_dog.toys
     }
     return render_template('view_dog.html', **context)
 #---------------Action Routes-------------------#
