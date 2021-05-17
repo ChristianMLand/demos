@@ -5,6 +5,7 @@ webfund/css/profile-page
 webfund/css/riot-demo
 webfund/html
 webfund/js/algos
+pytho/ninja_gold_modular
 # Visual Studio Code # 
 .vscode/* 
 !.vscode/settings.json 
