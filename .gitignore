@@ -5,8 +5,7 @@ webfund/css/profile-page
 webfund/css/riot-demo
 webfund/html
 webfund/js/algos
-python/ninja_gold_modular
-test/ninja_gold_modular
+python/ninja_gold_django
 # Visual Studio Code # 
 .vscode/* 
 !.vscode/settings.json 
