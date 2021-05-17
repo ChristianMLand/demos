@@ -2,9 +2,6 @@ from flask_app.config.mysqlconnection import connectToMySQL
 from flask_app import db
 
 class Schema:
-    def __init__(self,row_id):
-        self.id = row_id
-
     @staticmethod#can be called either by the class directly or an instance of the class
     def format_data(columns):
         cols = [f'`{col}`' for col in columns]
@@ -18,9 +15,9 @@ class Schema:
         return connectToMySQL(db).query_db(query,data)
 #-------------------Retrieve-------------------#
     @classmethod
-    def retrieve(cls, **data):#if nothing is passed in select all, otherwise filters by whatever keyword arguments are passed in
+    def retrieve(cls, **data):#if nothing is passed in, select all, otherwise filters by whatever keyword arguments are passed in
         cols,vals = cls.format_data(data.keys())
-        query = f"SELECT * FROM `{cls.table}` {'WHERE '+' AND'.join(f' {col}={val}' for col,val in zip(cols,vals)) if data else ''}"
+        query = f"SELECT * FROM `{cls.table}` {'WHERE'+' AND'.join(f' {col}={val}' for col,val in zip(cols,vals)) if data else ''}"
         return connectToMySQL(db).query_db(query,data)
 #-------------------Update---------------------#
     @classmethod

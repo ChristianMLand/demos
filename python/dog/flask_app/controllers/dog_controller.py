@@ -1,6 +1,5 @@
 from flask_app import app
 from flask import redirect, request, render_template
-
 from flask_app.models.dog_model import Dog
 from flask_app.models.toy_model import Toy
 
@@ -12,18 +11,14 @@ def index():
 @app.route('/dogs/<int:dog_id>')
 def show_dog(dog_id):
     context = {
-        "dog" : Dog.retrieve(id=dog_id)[0],
+        "dog" : Dog(Dog.retrieve(id=dog_id)[0]),
         "all_toys": Toy.retrieve(),
-        "owned_toys" : Dog.get_toys(id=dog_id)
     }
     return render_template('view_dog.html', **context)
 #---------------Action Routes-------------------#
 @app.route('/dogs/create', methods=['POST'])
 def create_dog():
-    Dog.create(
-        name=request.form['name'],
-        type=request.form['type']
-    )
+    Dog.create(**request.form)
     return redirect('/')
 
 @app.route('/dogs/<int:dog_id>/add-toy', methods=['POST'])
