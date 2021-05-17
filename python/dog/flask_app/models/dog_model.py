@@ -15,7 +15,7 @@ class Dog(Schema):
     
     @classmethod
     def remove_toy(cls, **data):
-        query = "DELETE FROM `dogs_has_dog_toys` WHERE `dog_toys_id` = %(toy_id)s AND `dogs_id` = %(dog_id)s"
+        query = "DELETE FROM `dogs_has_dog_toys` WHERE `dogs_id` = %(dog_id)s AND `dog_toys_id` = %(toy_id)s"
         return connectToMySQL(cls.db).query_db(query, data)
     
     @classmethod
