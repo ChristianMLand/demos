@@ -2,11 +2,11 @@ from flask_app.models.schema_model import Schema
 from flask_app.models.mtm_model import MtM
 
 '''
+Dog.create(name="Spot",type="Dalmation",fav_toy_id="1") -> should create a new dog in the db
+all_dogs = Dog.retrieve() -> should give a list of all dogs
 dog = Dog.retrieve(id=1) -> should give dog with id=1
-dog.toys.retrieve() -> should give all toys associated with the dog id=1
-dog.toys.retrieve(id=1) -> should give toy that has the id=1 and is associated with dog id=1
-all_toys = Toy.retrieve() -> should give all toys
-first_toy = Toy.retrieve(id=1) -> should give toy with id=1
+dog.owned_dog_toys.retrieve() -> should return all toys owned by the dog id=1
+dog.fav_toy -> should return the Toy favorited by the dog
 '''
 class Dog(Schema):
     def __init__(self, **data):
@@ -27,4 +27,4 @@ class Dog(Schema):
     def fav_toy(self):
         return Toy.retrieve(id=self._fav_toy_id)[0];
 
-from flask_app.models.toy_model import Toy
+from flask_app.models.toy_model import Toy#circular import with Toy
