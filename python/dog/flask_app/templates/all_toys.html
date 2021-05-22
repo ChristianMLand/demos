@@ -16,16 +16,13 @@
                 <tr>
                     <th>ID</th>
                     <th>Name</th>
-                    <th>Times favorited</th>
                 </tr>
             </thead>
             <tbody>
                 {% for toy in all_toys %}
                 <tr>
-                    
                     <td>{{toy.id}}</td>
                     <td><a href="/toys/{{toy.id}}">{{toy.name}}</a></td>
-                    <td>{{toy.dogs_that_favorited|length}}</td>
                 </tr>
                 {% endfor %}
             </tbody>
