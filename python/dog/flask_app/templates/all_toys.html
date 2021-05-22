@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Toys</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div id="wrapper">
+        <a href="/">View all dogs</a>
+        <h1>All Toys</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Times favorited</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for toy in all_toys %}
+                <tr>
+                    
+                    <td>{{toy.id}}</td>
+                    <td><a href="/toys/{{toy.id}}">{{toy.name}}</a></td>
+                    <td>{{toy.dogs_that_favorited|length}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <form action="/toys/create" method="POST">
+            <fieldset>
+                <legend>Create Toy</legend>
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input id="name" type="text" name="name">
+                </div>
+                <button>Create toy</button>
+            </fieldset>
+        </form>
+    </div>
+</body>
+</html>

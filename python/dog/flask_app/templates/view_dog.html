@@ -9,10 +9,11 @@
 <body>
     <h1>{{dog.name}}</h1>
     <p>Type: {{dog.type}}</p>
-    <p>Current toys:</p>
+    <p>Favorite Toy: {{dog.fav_toy.name}}</p>
+    <p>Owned toys:</p>
     <ul>
     {% for toy in owned_toys %}
-        <li>{{toy.name}} <a href="/dogs/{{dog.id}}/remove-toy/{{toy.id}}">remove</a></li>
+        <li>{{toy.name}} <a href="/toys/{{toy.id}}">view</a> <a href="/dogs/{{dog.id}}/remove-toy/{{toy.id}}">remove</a></li>
     {% endfor %}
     </ul>
     <form action="/dogs/{{dog.id}}/add-toy" method="POST">

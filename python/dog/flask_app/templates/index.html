@@ -9,6 +9,7 @@
 </head>
 <body>
     <div id="wrapper">
+        <a href="/toys">View all toys</a>
         <h1>All dogs</h1>
         <table>
             <thead>
@@ -39,6 +40,14 @@
                 <div class="form-group">
                     <label for="type">Type:</label>
                     <input id="type" type="text" name="type">
+                </div>
+                <div class="form-group">
+                    <label for="fav_toy">Favorite Toy:</label>
+                    <select name="fav_toy_id" id="fav_toy">
+                        {% for toy in all_toys %}
+                        <option value="{{toy.id}}">{{toy.name}}</option>
+                        {% endfor %}
+                    </select>
                 </div>
                 <button>Create dog</button>
             </fieldset>

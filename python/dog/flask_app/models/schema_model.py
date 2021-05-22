@@ -12,13 +12,14 @@ class Schema:
     def create(cls, **data):
         cols,vals = cls.format_data(data.keys())
         query = f"INSERT INTO `{cls.table}` ({', '.join(cols)}) VALUES ({', '.join(vals)})"
-        return connectToMySQL(db).query_db(query,data)
+        new_id = connectToMySQL(db).query_db(query,data)
+        return cls(id=new_id,**data)
 #-------------------Retrieve-------------------#
     @classmethod
     def retrieve(cls, **data):#if nothing is passed in, select all, otherwise filters by whatever keyword arguments are passed in
         cols,vals = cls.format_data(data.keys())
         query = f"SELECT * FROM `{cls.table}` {'WHERE'+' AND'.join(f' {col}={val}' for col,val in zip(cols,vals)) if data else ''}"
-        return connectToMySQL(db).query_db(query,data)
+        return [cls(**item) for item in  connectToMySQL(db).query_db(query,data)]
 #-------------------Update---------------------#
     @classmethod
     def update(cls, **data):
@@ -32,3 +33,8 @@ class Schema:
         query = f"DELETE FROM `{cls.table}` WHERE {' AND '.join(f'{col}={val}' for col,val in zip(cols,vals))}"
         return connectToMySQL(db).query_db(query,data)
 #----------------------------------------------#
+    def __repr__(self):
+        return f"<{self.table} object: id={self.id}>"
+
+    def __lt__(self,other):
+        return self.id < other.id
