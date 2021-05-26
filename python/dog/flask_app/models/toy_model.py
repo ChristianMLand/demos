@@ -26,5 +26,12 @@ class Toy(Schema):
     def dogs_that_favorited(self):
         return Dog.retrieve(fav_toy_id=self.id)
 
+@Toy.validator("Toy name is required!")
+def name(val):
+    return bool(val)
+
+@Toy.validator("Toy name should be at least 3 characters!")
+def name(val):
+    return len(val) >= 3
 
 from flask_app.models.dog_model import Dog#circular import with Dog

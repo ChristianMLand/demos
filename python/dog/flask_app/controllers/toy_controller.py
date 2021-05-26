@@ -13,8 +13,7 @@ def show_toy(toy_id):
 #---------------Action Routes-------------------#
 @app.route('/toys/create', methods=['POST'])
 def create_toy():
-    Toy.create(
-        name=request.form['name']
-    )
+    if Toy.validate(**request.form):
+        Toy.create(**request.form)
     return redirect('/toys')
 #-----------------------------------------------#

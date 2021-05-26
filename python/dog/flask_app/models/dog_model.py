@@ -28,19 +28,19 @@ class Dog(Schema):
     def fav_toy(self):
         return Toy.retrieve(id=self._fav_toy_id)[0];
 
-@Dog.validator("Name is required!")
+@Dog.validator("Dog name is required!")
 def name(val):
     return bool(val)
 
-@Dog.validator("Name should be at least 3 characters long!")
+@Dog.validator("Dog name should be at least 3 characters long!")
 def name(val):
     return len(val) >= 3
 
-@Dog.validator("Type is required!")
+@Dog.validator("Dog type is required!")
 def type(val):
     return bool(val)
 
-@Dog.validator("Type should be at least 3 characters long!")
+@Dog.validator("Dog type should be at least 3 characters long!")
 def type(val):
     return len(val) >= 3
 

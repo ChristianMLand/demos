@@ -5,8 +5,6 @@ from flask_app import db
 #TODO more error handling
 
 class Schema:
-    validators = {}
-
     @staticmethod#can be called either by the class directly or an instance of the class
     def format_data(columns):
         cols = [f'`{col}`' for col in columns]
@@ -52,10 +50,9 @@ class Schema:
     @classmethod
     def validator(cls,msg):
         def register(func):
-            if func.__name__ not in cls.validators:
-                cls.validators[func.__name__] = [(func,msg)]
-            else:
-                cls.validators[func.__name__].append((func,msg))
+            cls.validators = getattr(cls,"validators",{})
+            cls.validators[func.__name__] = cls.validators.get(func.__name__,[])
+            cls.validators[func.__name__].append((func,msg))
         return register
 #----------------------------------------------#
     def __repr__(self):#more readable representation
