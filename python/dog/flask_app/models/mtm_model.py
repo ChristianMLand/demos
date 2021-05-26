@@ -5,7 +5,7 @@ from flask_app import db
 
 class MtM:
     '''
-    A class to that holds methods for querying many-to-many relationships
+    A class that holds methods for querying many-to-many relationships
 
     ...
 
