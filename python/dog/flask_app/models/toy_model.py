@@ -9,6 +9,8 @@ toy.dogs_that_own.retrieve() -> should return a list of all the dogs that own th
 toy.dogs_that_favorited -> should return a list of all the dogs that favorited the toy with id=1
 '''
 class Toy(Schema):
+    table = "dog_toys"
+    
     def __init__(self, **data):
         self.id = data.get('id')
         self.name = data.get('name')
@@ -24,6 +26,5 @@ class Toy(Schema):
     def dogs_that_favorited(self):
         return Dog.retrieve(fav_toy_id=self.id)
 
-    table = "dog_toys"
 
 from flask_app.models.dog_model import Dog#circular import with Dog

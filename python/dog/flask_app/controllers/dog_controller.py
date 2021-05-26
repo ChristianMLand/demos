@@ -25,7 +25,8 @@ def show_dog(dog_id):
 #---------------Action Routes-------------------#
 @app.route('/dogs/create', methods=['POST'])
 def create_dog():
-    Dog.create(**request.form)
+    if Dog.validate(**request.form):
+        Dog.create(**request.form)
     return redirect('/')
 
 @app.route('/dogs/<int:dog_id>/add-toy', methods=['POST'])

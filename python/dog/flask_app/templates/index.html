@@ -30,6 +30,7 @@
                 {% endfor %}
             </tbody>
         </table>
+        {% with messages = get_flashed_messages() %}
         <form action="/dogs/create" method="POST">
             <fieldset>
                 <legend>Create Dog</legend>
@@ -50,8 +51,14 @@
                     </select>
                 </div>
                 <button>Create dog</button>
+                {% if messages %}
+                    {% for message in messages %}
+                        <p>{{message}}</p>
+                    {% endfor %}
+                {% endif %}
             </fieldset>
         </form>
+        {% endwith %}
     </div>
 </body>
 </html>

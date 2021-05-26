@@ -1,6 +1,8 @@
 from flask_app.config.mysqlconnection import connectToMySQL
 from flask_app import db
 
+#TODO more error handling
+
 class MtM:
     def __init__(self, **data):
         self.left = data.get("left_table")
@@ -22,3 +24,6 @@ class MtM:
         query += f"JOIN `{self.middle}` ON `{self.right.table}_id` = `{self.right.table}`.id "
         query += f"WHERE `{self.left.table}_id`={self.left.id}"
         return [self.right(**item) for item in connectToMySQL(db).query_db(query)]
+    
+    def __repr__(self):#more readable representation
+        return f"<MtM obj: table={self.middle}>"

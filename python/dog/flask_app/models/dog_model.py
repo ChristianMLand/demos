@@ -9,6 +9,8 @@ dog.owned_dog_toys.retrieve() -> should return all toys owned by the dog id=1
 dog.fav_toy -> should return the Toy favorited by the dog
 '''
 class Dog(Schema):
+    table = "dogs"
+    
     def __init__(self, **data):
         self.id = data.get('id')
         self.name = data.get('name')
@@ -17,7 +19,6 @@ class Dog(Schema):
         self.updated_at = data.get('updated_at')
         self._fav_toy_id = data.get('fav_toy_id')
         self._owned_dog_toys = MtM(left_table=self,right_table=Toy,middle_table='dog_has_dog_toy')
-    table = "dogs"
 
     @property
     def owned_dog_toys(self):
@@ -26,5 +27,22 @@ class Dog(Schema):
     @property
     def fav_toy(self):
         return Toy.retrieve(id=self._fav_toy_id)[0];
+
+@Dog.validator("Name is required!")
+def name(val):
+    return bool(val)
+
+@Dog.validator("Name should be at least 3 characters long!")
+def name(val):
+    return len(val) >= 3
+
+@Dog.validator("Type is required!")
+def type(val):
+    return bool(val)
+
+@Dog.validator("Type should be at least 3 characters long!")
+def type(val):
+    return len(val) >= 3
+
 
 from flask_app.models.toy_model import Toy#circular import with Toy
