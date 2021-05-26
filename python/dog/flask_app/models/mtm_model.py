@@ -46,7 +46,7 @@ class MtM:
         self.right = data.get("right_table")
         self.middle = data.get("middle_table")
 
-    def add(self, *items):#TODO properly sanitize
+    def add(self, *items):
         """
         Creates a new relationship for the given row and any rows passed in as arguments
 
@@ -63,7 +63,7 @@ class MtM:
         query += f"VALUES {', '.join(f'({self.left.id},{item.id})' for item in items)}"
         return connectToMySQL(db).query_db(query)
 
-    def remove(self, *items):#TODO properly sanitize
+    def remove(self, *items):
         """
         Removes relationship from given row and any rows passed in as arguments
 

@@ -31,7 +31,7 @@ class Schema:
     validate(**data):
         Runs any registered validators against given data and returns if valid or not
     '''
-    @staticmethod#can be called either by the class directly or an instance of the class
+    @staticmethod
     def format_data(columns:List[str]) -> Tuple[List[str],List[str]]:
         """
         Formats given data in a way that is safe to pass into a sql query without risk of sql injection
@@ -72,7 +72,7 @@ class Schema:
         return cls(id=new_id,**data)
 #-------------------Retrieve-------------------#
     @classmethod
-    def retrieve(cls, **data):#if no data passed in, select all, otherwise filter by whatever keyword arguments are passed in
+    def retrieve(cls, **data):
         '''
         Retrieves everything from the database that matches the given data in the form of a list.
 
@@ -95,7 +95,7 @@ class Schema:
         return results[0] if len(results) == 1 else results
 #-------------------Update---------------------#
     @classmethod
-    def update(cls, **data):#TODO update instance as well
+    def update(cls, **data):
         '''
         Updates the target row in the database with the given data
 
