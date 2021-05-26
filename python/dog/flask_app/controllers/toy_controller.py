@@ -9,7 +9,7 @@ def all_toys():
 
 @app.route('/toys/<int:toy_id>')
 def show_toy(toy_id):
-    return render_template('view_toy.html', toy=Toy.retrieve(id=toy_id))
+    return render_template('view_toy.html', toy=Toy.retrieve(id=toy_id)[0])
 #---------------Action Routes-------------------#
 @app.route('/toys/create', methods=['POST'])
 def create_toy():

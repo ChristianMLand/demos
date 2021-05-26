@@ -15,7 +15,7 @@ def index():
 
 @app.route('/dogs/<int:dog_id>')
 def show_dog(dog_id):
-    this_dog = Dog.retrieve(id=dog_id)
+    this_dog = Dog.retrieve(id=dog_id)[0]
     context = {
         "dog" : this_dog,
         "all_toys": Toy.retrieve(),
@@ -31,15 +31,15 @@ def create_dog():
 
 @app.route('/dogs/<int:dog_id>/add-toy', methods=['POST'])
 def give_toy(dog_id):
-    this_dog = Dog.retrieve(id=dog_id)
-    this_toy = Toy.retrieve(id=request.form['toy_id'])
+    this_dog = Dog.retrieve(id=dog_id)[0]
+    this_toy = Toy.retrieve(id=request.form['toy_id'])[0]
     this_dog.owned_dog_toys.add(this_toy)
     return redirect(f'/dogs/{dog_id}')
 
 @app.route('/dogs/<int:dog_id>/remove-toy/<int:toy_id>')
 def take_toy(dog_id,toy_id):
-    this_dog = Dog.retrieve(id=dog_id)
-    this_toy = Toy.retrieve(id=toy_id)
+    this_dog = Dog.retrieve(id=dog_id)[0]
+    this_toy = Toy.retrieve(id=toy_id)[0]
     this_dog.owned_dog_toys.remove(this_toy)
     return redirect(f'/dogs/{dog_id}')
 #-----------------------------------------------#

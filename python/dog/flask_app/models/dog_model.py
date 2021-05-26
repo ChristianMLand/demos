@@ -18,7 +18,7 @@ class Dog(Schema):
         self.created_at = data.get('created_at')
         self.updated_at = data.get('updated_at')
         self._fav_toy_id = data.get('fav_toy_id')
-        self._owned_dog_toys = MtM(left_table=self,right_table=Toy,middle_table='dog_has_dog_toy')
+        self._owned_dog_toys = MtM(left=self,right=Toy,middle='dog_has_dog_toy')
 
     @property
     def owned_dog_toys(self):
@@ -26,7 +26,7 @@ class Dog(Schema):
 
     @property
     def fav_toy(self):
-        return Toy.retrieve(id=self._fav_toy_id);
+        return Toy.retrieve(id=self._fav_toy_id)[0];
 
 @Dog.validator("Dog name is required!")
 def name(val):

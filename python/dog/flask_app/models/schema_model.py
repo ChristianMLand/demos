@@ -1,4 +1,3 @@
-from typing import List,Tuple
 from flask import flash
 from flask_app.config.mysqlconnection import connectToMySQL
 from flask_app import db
@@ -12,41 +11,20 @@ class Schema:
     Classes that represent tables in your database should
     extend this class.
 
-    ...
-
-    Class Methods:
-    --------
-    create(**data):
-        Creates a new row in the database with the given data
-    
-    retrieve(**data):
-        Returns a list of rows from the database that match the given data
-    
-    update(**data):
-        Updates a row in the database with the given data
-
-    delete(**data):
-        Deletes a row from the database that matches the given data
-
-    validate(**data):
-        Runs any registered validators against given data and returns if valid or not
+    Should only ever be extended and not instantiated on its own.
     '''
     @staticmethod
-    def format_data(columns:List[str]) -> Tuple[List[str],List[str]]:
+    def format_data(columns):
         """
-        Formats given data in a way that is safe to pass into a sql query without risk of sql injection
+        Formats given data in a way that is safe to pass into a sql query without risk of sql injection.
 
         Parameters
         ----------
-        columns : list[str]
-            list of column names
+            columns (list[str]): List of column/variable names.
 
         Returns
         -------
-            cols : list[str]
-                list of escaped column names
-            vals : list[str]
-                list of formatted variable names 
+            Tuple containing a list of escaped column names and a list of formatted variable names.
         """
         cols = [f'`{col}`' for col in columns]
         vals = [f'%({col})s' for col in columns]
@@ -55,16 +33,21 @@ class Schema:
     @classmethod
     def create(cls, **data):
         '''
-        Creates a new row in the database based on the given data
+        Creates a new row in the database built from the given data.
+
+        Example usages:
+        --------------
+            ``User.create(name="John",age=35) -> creates a new user with name "John" and age of 35``
+
+            ``User.create(**request.form) -> creates a new user based on the data recieved from the form``
 
         Parameters
         ----------
-        data : dict[str,str]
-            key word arguments for each of the columns and the values to create
+            data (str): Key word arguments for each of the columns and the values to create.
 
         Returns
         -------
-            new instance of the given class
+            New instance of the given class.
         '''
         cols,vals = cls.format_data(data.keys())
         query = f"INSERT INTO `{cls.table}` ({', '.join(cols)}) VALUES ({', '.join(vals)})"
@@ -78,53 +61,66 @@ class Schema:
 
         If no parameters are given, everything from that table will be returned.
 
-        If only one match was found, returns just the single element.
+        Example usages:
+        --------------
+            ``User.retrieve() -> returns a list of all users``
+
+            ``User.retrieve(id=1) -> returns a single user matching the id``
+
+            ``User.retrieve(name="John") -> returns a list of all users with the name "John"``
 
         Parameters
         ----------
-        data : dict[str,str]
-            key word arguments for each of the columns and their values to try and match against
+            data (**str) : Key word arguments for each of the column names and the values to try and match.
 
         Returns
         -------
-            list of class instances created from the matching rows in the database
+            List of class instances created from the matching rows in the database.
         '''
         cols,vals = cls.format_data(data.keys())
         query = f"SELECT * FROM `{cls.table}` {'WHERE'+' AND'.join(f' {col}={val}' for col,val in zip(cols,vals)) if data else ''}"
-        results = [cls(**item) for item in  connectToMySQL(db).query_db(query,data)]
-        return results[0] if len(results) == 1 else results
+        return [cls(**item) for item in  connectToMySQL(db).query_db(query,data)]
 #-------------------Update---------------------#
-    @classmethod
-    def update(cls, **data):
+    def update(self, **data):
         '''
-        Updates the target row in the database with the given data
+        Updates the target instance in the database with the given data.
+
+        Example usages:
+        --------------
+            ``my_user.update(name="Joe",age=24) -> updates my_user to now have the name of "Joe" and age of 24``
+
+            ``my_user.update(**request.form) -> updates my_user based on the data recieved from the form``
 
         Parameters
         ----------
-        data : dict[str,str]
-            key word arguments for each of the columns and their values to update to
+            data (**str) : Key word arguments for each of the column names and the new values to update with.
 
         Returns
         -------
-            None
+            None if successful or False if query failed.
         '''
-        cols,vals = cls.format_data(data.keys())
-        query = f"UPDATE `{cls.table}` SET {', '.join(f'{col}={val}' for col,val in zip(cols,vals))} WHERE id=%(id)s"
+        cols,vals = self.format_data(data.keys())
+        query = f"UPDATE `{self.table}` SET {', '.join(f'{col}={val}' for col,val in zip(cols,vals))} WHERE id={self.id}"
         return connectToMySQL(db).query_db(query,data)
 #-------------------Delete---------------------#
     @classmethod
     def delete(cls, **data):
         '''
-        Deletes a row from the database that matches the given data
+        Deletes all rows from the database that match the given data.
+
+        Example usages:
+        --------------
+            ``User.delete(id=1) -> deletes user with the id of 1``
+
+            ``User.delete(name="John") -> deletes all users with the name "John"``
 
         Parameters
         ----------
-        data : dict[str,str]
-            key word arguments for each of the columns and their values to try and match against
+            data (**str) : Key word arguments for each of the column names and the values to try and match.
 
         Returns
         -------
-            None
+            None if successful or False if query failed.
         '''
         cols,vals = cls.format_data(data.keys())
         query = f"DELETE FROM `{cls.table}` WHERE {' AND '.join(f'{col}={val}' for col,val in zip(cols,vals))}"
@@ -133,19 +129,23 @@ class Schema:
     @classmethod
     def validate(cls,**data):
         '''
-        Validates the given data by passing it into any validators registered to the class
-        with the validator decorator.
+        Validates the given data by applying any validators registered to the class via the validator decorator.
 
         If no validators are registered, then the data will always be considered valid.
 
+        Example usages:
+        --------------
+            ``User.validate(**request.form) -> validates data from form``
+
+            ``User.validate(name="abc",age="24") -> validates the given attributes``
+
         Parameters
         ----------
-        data : dict[str,str]
-            key word arguments for each of the fields and their values to be validated
+            data (**str) : Key word arguments for each of the field names and the values to be validated.
 
         Returns
         -------
-            Bool : whether all of the data is valid or not
+            Boolean determining whether all of the data is valid or not
         '''
         is_valid = True
         for field,valids in cls.validators.items():
@@ -163,12 +163,11 @@ class Schema:
 
         The method below the decorator should be named the exact same
         as the field you are trying to validate and should return a boolean
-        determining whether the field is valid or not.
+        which will be used to determine if the field is valid or not.
 
         Parameters
         ----------
-        msg : dict[str,str]
-            Error message for the specific validation
+            msg (str): Error message for the specific validation
         '''
         def register(func):
             cls.validators = getattr(cls,"validators",{})

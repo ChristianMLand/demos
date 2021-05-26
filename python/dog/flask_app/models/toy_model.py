@@ -16,7 +16,7 @@ class Toy(Schema):
         self.name = data.get('name')
         self.created_at = data.get("created_at")
         self.updated_at = data.get("updated_at")
-        self._dogs_that_own = MtM(left_table=self,right_table=Dog,middle_table='dog_has_dog_toy')
+        self._dogs_that_own = MtM(left=self,right=Dog,middle='dog_has_dog_toy')
 
     @property
     def dogs_that_own(self):
