@@ -14,21 +14,21 @@ class Schema:
 
     ...
 
-    Methods:
+    Class Methods:
     --------
-    create(cls,**data):
+    create(**data):
         Creates a new row in the database with the given data
     
-    retrieve(cls,**data):
+    retrieve(**data):
         Returns a list of rows from the database that match the given data
     
-    update(cls,**data):
+    update(**data):
         Updates a row in the database with the given data
 
-    delete(cls,**data):
+    delete(**data):
         Deletes a row from the database that matches the given data
 
-    validate(cls, **data):
+    validate(**data):
         Runs any registered validators against given data and returns if valid or not
     '''
     @staticmethod#can be called either by the class directly or an instance of the class
