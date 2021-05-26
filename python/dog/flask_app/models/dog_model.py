@@ -26,7 +26,7 @@ class Dog(Schema):
 
     @property
     def fav_toy(self):
-        return Toy.retrieve(id=self._fav_toy_id)[0];
+        return Toy.retrieve(id=self._fav_toy_id);
 
 @Dog.validator("Dog name is required!")
 def name(val):
