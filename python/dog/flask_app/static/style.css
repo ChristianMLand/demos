@@ -17,6 +17,7 @@ button{
     color: #61c261;
     border: 2px solid #61c261;
     transition: 2500 0% ease;
+    border-radius: 2px;
 }
 button:hover{
     background: #61c261;
@@ -84,4 +85,12 @@ th{
 }
 tbody>:nth-child(2n){
     background: #e7e7e7;
+}
+.error{
+    color: #a2003b;
+    font-size: 20px;
+    background: #ff00004e;
+    border-radius:2px;
+    padding: 0.2rem 0;
+    margin: 0.5rem 0;
 }

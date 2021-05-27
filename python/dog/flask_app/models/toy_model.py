@@ -34,4 +34,8 @@ def name(val):
 def name(val):
     return len(val) >= 3
 
-from flask_app.models.dog_model import Dog#circular import with Dog
+@Toy.validator("Toy names should match!",match="name")
+def confirm_name(val,match):
+    return val == match
+
+from flask_app.models.dog_model import Dog#at bottom because of circular import with Dog

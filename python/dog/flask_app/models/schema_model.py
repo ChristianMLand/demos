@@ -2,8 +2,6 @@ from flask import flash
 from flask_app.config.mysqlconnection import connectToMySQL
 from flask_app import db
 
-#TODO more error handling
-
 class Schema:
     '''
     A class to that holds methods for basic sql queries.
@@ -148,16 +146,18 @@ class Schema:
             Boolean determining whether all of the data is valid or not
         '''
         is_valid = True
+
         for field,valids in cls.validators.items():
-            for valid,msg in valids:
-                if not valid(data.get(field)):
-                    flash(msg)
+            for valid,msg,kwargs in valids:
+                kwargs = {k:data.get(v) for k,v in kwargs.items()}
+                if not valid(data.get(field),**kwargs):
+                    flash(msg,f"{cls.__name__}.{field}")
                     is_valid = False
                     break
         return is_valid
 
     @classmethod
-    def validator(cls,msg):
+    def validator(cls,msg,**kwargs):
         '''
         Decorator used to register validators to a given class.
 
@@ -172,7 +172,7 @@ class Schema:
         def register(func):
             cls.validators = getattr(cls,"validators",{})
             cls.validators[func.__name__] = cls.validators.get(func.__name__,[])
-            cls.validators[func.__name__].append((func,msg))
+            cls.validators[func.__name__].append((func,msg,kwargs))
         return register
 #----------------------------------------------#
     def __repr__(self):#more readable representation

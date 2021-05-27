@@ -30,7 +30,6 @@
                 {% endfor %}
             </tbody>
         </table>
-        {% with messages = get_flashed_messages() %}
         <form action="/dogs/create" method="POST">
             <fieldset>
                 <legend>Create Dog</legend>
@@ -38,10 +37,20 @@
                     <label for="name">Name:</label>
                     <input id="name" type="text" name="name">
                 </div>
+                {% with errors = get_flashed_messages(category_filter=["Dog.name"]) %}
+                    {% for error in errors %}
+                        <p class="error">{{error}}</p>
+                    {% endfor %}
+                {% endwith %}
                 <div class="form-group">
                     <label for="type">Type:</label>
                     <input id="type" type="text" name="type">
                 </div>
+                {% with errors = get_flashed_messages(category_filter=["Dog.type"]) %}
+                    {% for error in errors %}
+                        <p class="error">{{error}}</p>
+                    {% endfor %}
+                {% endwith %}
                 <div class="form-group">
                     <label for="fav_toy">Favorite Toy:</label>
                     <select name="fav_toy_id" id="fav_toy">
@@ -51,14 +60,9 @@
                     </select>
                 </div>
                 <button>Create dog</button>
-                {% if messages %}
-                    {% for message in messages %}
-                        <p>{{message}}</p>
-                    {% endfor %}
-                {% endif %}
             </fieldset>
         </form>
-        {% endwith %}
+        
     </div>
 </body>
 </html>

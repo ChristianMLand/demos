@@ -27,7 +27,6 @@
                 {% endfor %}
             </tbody>
         </table>
-        {% with messages = get_flashed_messages() %}
         <form action="/toys/create" method="POST">
             <fieldset>
                 <legend>Create Toy</legend>
@@ -35,15 +34,23 @@
                     <label for="name">Name:</label>
                     <input id="name" type="text" name="name">
                 </div>
-                <button>Create toy</button>
-                {% if messages %}
-                    {% for message in messages %}
-                        <p>{{message}}</p>
+                {% with errors = get_flashed_messages(category_filter=["Toy.name"]) %}
+                    {% for error in errors %}
+                        <p class="error">{{error}}</p>
                     {% endfor %}
-                {% endif %}
+                {% endwith %}
+                <div class="form-group">
+                    <label for="confirm_name">Confirm name:</label>
+                    <input id="confirm_name" type="text" name="confirm_name">
+                </div>
+                {% with errors = get_flashed_messages(category_filter=["Toy.confirm_name"]) %}
+                    {% for error in errors %}
+                        <p class="error">{{error}}</p>
+                    {% endfor %}
+                {% endwith %}
+                <button>Create toy</button>
             </fieldset>
         </form>
-        {% endwith %}
     </div>
 </body>
 </html>

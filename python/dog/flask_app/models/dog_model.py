@@ -1,16 +1,9 @@
 from flask_app.models.schema_model import Schema
 from flask_app.models.mtm_model import MtM
 
-'''
-Dog.create(name="Spot",type="Dalmation",fav_toy_id="1") -> should create a new dog in the db
-all_dogs = Dog.retrieve() -> should give a list of all dogs
-dog = Dog.retrieve(id=1) -> should give dog with id=1
-dog.owned_dog_toys.retrieve() -> should return all toys owned by the dog id=1
-dog.fav_toy -> should return the Toy favorited by the dog
-'''
 class Dog(Schema):
     table = "dogs"
-    
+
     def __init__(self, **data):
         self.id = data.get('id')
         self.name = data.get('name')
@@ -44,5 +37,4 @@ def type(val):
 def type(val):
     return len(val) >= 3
 
-
-from flask_app.models.toy_model import Toy#circular import with Toy
+from flask_app.models.toy_model import Toy#at bottom because of circular import with Toy
