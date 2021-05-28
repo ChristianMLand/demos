@@ -146,14 +146,14 @@ class Schema:
             Boolean determining whether all of the data is valid or not
         '''
         is_valid = True
-
         for field,valids in cls.validators.items():
-            for valid,msg,kwargs in valids:
-                kwargs = {k:data.get(v) for k,v in kwargs.items()}
-                if not valid(data.get(field),**kwargs):
-                    flash(msg,f"{cls.__name__}.{field}")
-                    is_valid = False
-                    break
+            if field in data:
+                for valid,msg,kwargs in valids:
+                    kwargs = {k:data.get(v) for k,v in kwargs.items()}
+                    if not valid(data.get(field),**kwargs):
+                        flash(msg,f"{cls.__name__}.{field}")
+                        is_valid = False
+                        break
         return is_valid
 
     @classmethod
