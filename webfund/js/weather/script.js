@@ -2,7 +2,6 @@ const convert= {
     "C" : f => (5/9 * (f - 32)).toPrecision(3),
     "F" : c => (9/5 * c + 32).toPrecision(2),
 }
-
 function toggleTemps(type){
     for(let el of document.querySelectorAll(".high,.low")){
         el.innerHTML = convert[type](parseFloat(el.innerHTML))

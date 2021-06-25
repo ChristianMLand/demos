@@ -17,11 +17,11 @@ body{
     width: 100%;
     box-sizing: border-box;
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-between;
+    padding: 10px 100px;
     align-items: center;
     color: white;
     background: #a9bfff;
-    padding: 10px;
 }
 
 #nav ul{
@@ -51,9 +51,6 @@ body{
     border-bottom: 3px solid black;
     margin-bottom: 20px;
     padding: 20px 0;
-}
-
-#main-lower{
 }
 
 #alert{
